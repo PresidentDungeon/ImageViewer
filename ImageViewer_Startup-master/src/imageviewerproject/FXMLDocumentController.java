@@ -98,6 +98,7 @@ public class FXMLDocumentController implements Initializable
         if (!images.isEmpty())
         {
             imageView.setImage(images.get(currentImageIndex));
+            textForPics.setText(titles.get(currentImageIndex));
         }
     }
 
