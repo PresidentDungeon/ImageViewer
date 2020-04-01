@@ -2,6 +2,7 @@ package imageviewerproject;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -22,8 +23,8 @@ import javafx.stage.Stage;
 
 public class FXMLDocumentController implements Initializable
 {
-    private final List<Image> images = new CopyOnWriteArrayList<>();
-    private final List<String> titles = new CopyOnWriteArrayList<>();
+    private final List<Image> imagesSwitch = new ArrayList<>();
+    private final List<String> titlesSwitch = new ArrayList<>();
     private int currentImageIndex = 0;
     private Scheduler imageScheduler = new Scheduler();
 
@@ -52,6 +53,9 @@ public class FXMLDocumentController implements Initializable
     @FXML
     private void handleBtnLoadAction(ActionEvent event)
     {
+         List<Image> images = new ArrayList<>();
+         List<String> titles = new ArrayList<>();
+        
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select image files");
         fileChooser.getExtensionFilters().add(new ExtensionFilter("Images", 
@@ -63,22 +67,23 @@ public class FXMLDocumentController implements Initializable
             files.forEach((File f) ->
             {
                 images.add(new Image(f.toURI().toString()));
+                imagesSwitch.add(new Image(f.toURI().toString()));
+                titlesSwitch.add(f.getName());
                 titles.add(f.getName());
             });
-            
             Slideshow s = new Slideshow(imageView, textForPics, images, titles, currentImageIndex);
             imageScheduler.addSlideshow(s);
-            displayImage();
+            
         }
     }
 
     @FXML
     private void handleBtnPreviousAction(ActionEvent event)
     {
-        if (!images.isEmpty())
+        if (!imagesSwitch.isEmpty())
         {
             currentImageIndex = 
-                    (currentImageIndex - 1 + images.size()) % images.size();
+                    (currentImageIndex - 1 + imagesSwitch.size()) % imagesSwitch.size();
             displayImage();
         }
     }
@@ -86,19 +91,19 @@ public class FXMLDocumentController implements Initializable
     @FXML
     private void handleBtnNextAction(ActionEvent event)
     {
-        if (!images.isEmpty())
+        if (!imagesSwitch.isEmpty())
         {
-            currentImageIndex = (currentImageIndex + 1) % images.size();
+            currentImageIndex = (currentImageIndex + 1) % imagesSwitch.size();
             displayImage();
         }
     }
 
     private void displayImage()
     {
-        if (!images.isEmpty())
+        if (!imagesSwitch.isEmpty())
         {
-            imageView.setImage(images.get(currentImageIndex));
-            textForPics.setText(titles.get(currentImageIndex));
+            imageView.setImage(imagesSwitch.get(currentImageIndex));
+            textForPics.setText(titlesSwitch.get(currentImageIndex));
         }
     }
 

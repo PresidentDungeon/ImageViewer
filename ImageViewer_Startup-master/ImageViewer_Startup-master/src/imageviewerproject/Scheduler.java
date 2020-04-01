@@ -50,13 +50,14 @@ public class Scheduler implements Runnable {
 
         if (executor == null || executor.isShutdown()) {
             executor = Executors.newSingleThreadExecutor();
-//            executor.submit(this);
+            executor.submit(this);
         }
 
         if (currentRunningSlideshow == null && slideshows.isEmpty()) {
             currentRunningSlideshow = slideshow;
             currentRunningSlideshow.handleStartSlideshow();
-        } else {
+        } 
+        else {
 
             try {
                 slideshows.put(slideshow);

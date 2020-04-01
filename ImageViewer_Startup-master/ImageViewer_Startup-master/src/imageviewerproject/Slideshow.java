@@ -45,7 +45,6 @@ public class Slideshow implements Runnable {
                     TimeUnit.SECONDS.sleep(DELAY);
                 }
             } catch (InterruptedException ex) {
-                System.out.println("Slideshow was stopped.");
             }
 
         }
@@ -57,7 +56,7 @@ public class Slideshow implements Runnable {
     }
 
     public void handleStopSlideshow() {
-        executor.shutdown();
+        executor.shutdownNow();
     }
 
 }
