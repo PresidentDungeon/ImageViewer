@@ -2,13 +2,16 @@ package imageviewerproject;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class Slideshow implements Callable<Integer> {
+public class Slideshow implements Runnable {
 
     private final long DELAY = 1;
     private int index = 0;
@@ -16,6 +19,7 @@ public class Slideshow implements Callable<Integer> {
     private Label lblFilename;
     private List<Image> images;
     private List<String> filenames;
+    private ExecutorService executor;
 
     public Slideshow(ImageView imageView, Label label,
             List<Image> images, List<String> filenames, int index) {
@@ -27,28 +31,33 @@ public class Slideshow implements Callable<Integer> {
     }
 
     @Override
-    public Integer call() throws Exception {
+    public void run() {
         if (!images.isEmpty()) {
             try {
                 while (true) {
-                    
-                    
-                    Platform.runLater(()->{
+
+                    Platform.runLater(() -> {
                         lblFilename.setText(filenames.get(index));
                         imageView.setImage(images.get(index));
                     });
-                    
-                    
+
                     index = (index + 1) % images.size();
                     TimeUnit.SECONDS.sleep(DELAY);
                 }
             } catch (InterruptedException ex) {
                 System.out.println("Slideshow was stopped.");
-            } finally {
-                return index;
             }
+
         }
-        return index;
+    }
+
+    public void handleStartSlideshow() {
+        executor = Executors.newSingleThreadExecutor();
+        executor.submit(this);
+    }
+
+    public void handleStopSlideshow() {
+        executor.shutdown();
     }
 
 }

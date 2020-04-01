@@ -2,14 +2,12 @@ package imageviewerproject;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,8 +25,7 @@ public class FXMLDocumentController implements Initializable
     private final List<Image> images = new CopyOnWriteArrayList<>();
     private final List<String> titles = new CopyOnWriteArrayList<>();
     private int currentImageIndex = 0;
-    private ExecutorService executor;
-    private Future<Integer> index;
+    private Scheduler imageScheduler = new Scheduler();
 
     @FXML
     Parent root;
@@ -68,6 +65,9 @@ public class FXMLDocumentController implements Initializable
                 images.add(new Image(f.toURI().toString()));
                 titles.add(f.getName());
             });
+            
+            Slideshow s = new Slideshow(imageView, textForPics, images, titles, currentImageIndex);
+            imageScheduler.addSlideshow(s);
             displayImage();
         }
     }
@@ -104,16 +104,12 @@ public class FXMLDocumentController implements Initializable
 
     @FXML
     private void handleStartSlideshow(ActionEvent event) {
-        Slideshow s = new Slideshow(imageView, textForPics, images, titles, currentImageIndex);
-        executor = Executors.newSingleThreadExecutor();
-        index = executor.submit(s);
-
+        imageScheduler.startSlideshow();
     }
 
     @FXML
     private void handleStopSlideshow(ActionEvent event) throws InterruptedException, ExecutionException {
-        executor.shutdownNow();
-        currentImageIndex = index.get();
+        imageScheduler.stopSlideshow();
     }
 
 
