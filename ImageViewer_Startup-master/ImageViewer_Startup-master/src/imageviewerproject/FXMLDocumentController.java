@@ -59,7 +59,7 @@ public class FXMLDocumentController implements Initializable
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select image files");
         fileChooser.getExtensionFilters().add(new ExtensionFilter("Images", 
-            "*.png", "*.jpg", "*.gif", "*.tif", "*.bmp"));        
+            "*.png", "*.jpg", "*.gif", "*.tif", "*.bmp", "*.jfif"));        
         List<File> files = fileChooser.showOpenMultipleDialog(new Stage());
                 
         if (!files.isEmpty())

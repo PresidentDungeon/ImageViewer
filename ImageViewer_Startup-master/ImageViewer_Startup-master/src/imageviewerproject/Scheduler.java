@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class Scheduler implements Runnable {
 
     private BlockingQueue<Slideshow> slideshows = new LinkedBlockingQueue();
-    private int timeSplitter = 20;
+    private int timeSplitter = 10;
     private Slideshow currentRunningSlideshow = null;
     private ExecutorService executor = null;
 
