@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class Scheduler implements Runnable {
 
     private BlockingQueue<Slideshow> slideshows = new LinkedBlockingQueue();
-    private int timeSplitter = 4;
+    private int timeSplitter = 20;
     private Slideshow currentRunningSlideshow = null;
     private ExecutorService executor = null;
 
@@ -55,7 +55,6 @@ public class Scheduler implements Runnable {
 
         if (currentRunningSlideshow == null && slideshows.isEmpty()) {
             currentRunningSlideshow = slideshow;
-            currentRunningSlideshow.handleStartSlideshow();
         } 
         else {
 
@@ -68,6 +67,8 @@ public class Scheduler implements Runnable {
 
     public synchronized void startSlideshow() {
         executor.submit(this);
+        currentRunningSlideshow.handleStartSlideshow();
+        
     }
 
     public synchronized void stopSlideshow() {
@@ -77,6 +78,8 @@ public class Scheduler implements Runnable {
         }
         if (slideshows.isEmpty()) {
             executor.shutdownNow();
+            currentRunningSlideshow = null;
+            executor = null;
         } else {
             try {
                 currentRunningSlideshow = slideshows.take();

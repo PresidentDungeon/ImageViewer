@@ -51,6 +51,10 @@ public class Slideshow implements Runnable {
     }
 
     public void handleStartSlideshow() {
+        if (executor != null && !executor.isShutdown())
+        {
+            executor.shutdownNow();
+        }
         executor = Executors.newSingleThreadExecutor();
         executor.submit(this);
     }

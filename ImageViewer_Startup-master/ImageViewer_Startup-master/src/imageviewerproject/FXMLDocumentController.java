@@ -73,6 +73,7 @@ public class FXMLDocumentController implements Initializable
             });
             Slideshow s = new Slideshow(imageView, textForPics, images, titles, currentImageIndex);
             imageScheduler.addSlideshow(s);
+            displayImage();
             
         }
     }
